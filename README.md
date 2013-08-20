@@ -1,4 +1,4 @@
 Vardoop
 =======
 
-variant calling tools on Hadoop
+A parallel variant calling tool on Hadoop
