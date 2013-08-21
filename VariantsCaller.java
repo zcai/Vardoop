@@ -17,11 +17,11 @@ public class VariantsCaller {
 		Configuration conf = new Configuration();
 		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 		if (otherArgs.length != 3) {
-			System.err.println("Usage: VariantsCaller <inputDir> <outputDir> <samtools|gatk>");
+			System.err.println("Usage: Vardoop <inputDir> <outputDir> <samtools|gatk>");
 			System.exit(2);
 		}
 		if (!(otherArgs[2].equalsIgnoreCase("samtools")) && !(otherArgs[2].equalsIgnoreCase("gatk"))){
-			System.err.println("Usage: VariantsCaller <inputDir> <outputDir> <samtools|gatk>");
+			System.err.println("Usage: Vardoop <inputDir> <outputDir> <samtools|gatk>");
 			System.exit(2);
 		}
 

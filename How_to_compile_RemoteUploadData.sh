@@ -1,0 +1,1 @@
+jdk1.7.0_04/bin/javac -classpath .:/your_path/commons-logging-1.1.1.jar:/your_path/hadoop-core-0.20.203.0.jar:/your_path/commons-configuration-1.6.jar:/your_path/commons-lang-2.4.jar RemoteUploadData.java

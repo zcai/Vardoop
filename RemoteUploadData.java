@@ -12,11 +12,15 @@ import java.net.MalformedURLException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.apache.hadoop.fs.permission.FsPermission;
-
+/*
+* RemoteUploadData.java is a utility program to upload data to HDFS
+* @Author Zhengqiu Cai
+* @Version 0.01
+*/
 class RemoteUploadData {
 	public static void main(String[] args) throws Exception {
 		if (args.length < 3) {
-			System.err.println("Usage: java -classpath .:/usr/local/hadoop-0.20.203.0/lib/commons-logging-1.1.1.jar:/usr/local/hadoop-0.20.203.0/hadoop-core-0.20.203.0.jar:/usr/local/hadoop-0.20.203.0/lib/commons-configuration-1.6.jar:/usr/local/hadoop-0.20.203.0/lib/commons-lang-2.4.jar RemoteUploadData <URL_data_source> <full_path_file_name_on_HDFS> <hdfs_name_URI> <replication factor>");
+			System.err.println("Usage: java -classpath .:/your_path/commons-logging-1.1.1.jar:/your_path/hadoop-core-0.20.203.0.jar:/your_path/commons-configuration-1.6.jar:/your_path/commons-lang-2.4.jar RemoteUploadData <URL_data_source> <full_path_file_name_on_HDFS> <hdfs_name_URI> <replication factor>");
 			System.err.println("For example : java RemoteUploadData ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/pilot2_high_cov_GRCh37_bams/data/NA19240/alignment/NA19240.chrom1.SOLID.bfast.YRI.high_coverage.20100311.bam /user/root/input/test_input.bam hdfs://ip-10-224-53-114.ec2.internal:50001");
 			System.err.println("This will upload the file from the ftp site to your hadoop file system.");
 			System.exit(2);
