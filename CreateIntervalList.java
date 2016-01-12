@@ -77,7 +77,7 @@ public class CreateIntervalList{
 					//din.read(l_text);
 					byte [] l_text = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 					pipe_buffer_start += 4;
-					int converted_l_text = bigToLittleEndian(byteArrayToInt(l_text,0));
+					int converted_l_text = Utils.bigToLittleEndian(Utils.byteArrayToInt(l_text,0));
 					bam_position += 4;
 					
 					//byte [] text = new byte[converted_l_text];
@@ -90,7 +90,7 @@ public class CreateIntervalList{
 					//din.read(n_ref);
 					byte [] n_ref = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 					pipe_buffer_start += 4;
-					int converted_n_ref = bigToLittleEndian(byteArrayToInt(n_ref,0));
+					int converted_n_ref = Utils.bigToLittleEndian(Utils.byteArrayToInt(n_ref,0));
 					bam_position += 4;
 					
 					for (int i=0;i<converted_n_ref;i++){
@@ -98,7 +98,7 @@ public class CreateIntervalList{
 						//din.read(l_name);
 						byte [] l_name = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 						pipe_buffer_start += 4;
-						int converted_l_name = bigToLittleEndian(byteArrayToInt(l_name,0));
+						int converted_l_name = Utils.bigToLittleEndian(Utils.byteArrayToInt(l_name,0));
 						bam_position += 4;
 
 						//byte [] name = new byte[converted_l_name];
@@ -111,7 +111,7 @@ public class CreateIntervalList{
 						//din.read(l_ref);
 						byte [] l_ref = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 						pipe_buffer_start += 4;
-						int converted_l_ref = bigToLittleEndian(byteArrayToInt(l_ref,0));
+						int converted_l_ref = Utils.bigToLittleEndian(Utils.byteArrayToInt(l_ref,0));
 						bam_position += 4;
 					}
 				}
@@ -123,7 +123,7 @@ public class CreateIntervalList{
 
 			current_pipe_buffer_start = pipe_buffer_start;
 			byte [] bam_block_size = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_bam_block_size = bigToLittleEndian(byteArrayToInt(bam_block_size,0));
+			int converted_bam_block_size = Utils.bigToLittleEndian(Utils.byteArrayToInt(bam_block_size,0));
 			current_pipe_buffer_start += 4;
 			if (converted_bam_block_size < 0){
 				bam_position += 1;
@@ -132,7 +132,7 @@ public class CreateIntervalList{
 			}
 
 			byte [] refID = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_refID = bigToLittleEndian(byteArrayToInt(refID,0));
+			int converted_refID = Utils.bigToLittleEndian(Utils.byteArrayToInt(refID,0));
 			current_pipe_buffer_start += 4;
 			if ((converted_refID < -1)||(converted_refID > 100)){
 				bam_position += 1;
@@ -141,7 +141,7 @@ public class CreateIntervalList{
 			}
 
 			byte [] pos = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_pos = bigToLittleEndian(byteArrayToInt(pos,0));
+			int converted_pos = Utils.bigToLittleEndian(Utils.byteArrayToInt(pos,0));
 			current_pipe_buffer_start += 4;
 			if (converted_pos < -1){
 				bam_position += 1;
@@ -159,14 +159,14 @@ public class CreateIntervalList{
 			current_pipe_buffer_start += 3;
 
 			byte [] n_cigar_op = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+2);
-			int converted_n_cigar_op = bigToLittleEndianShort(byteArrayToShort(n_cigar_op,0));
+			int converted_n_cigar_op = Utils.bigToLittleEndianShort(byteArrayToShort(n_cigar_op,0));
 			current_pipe_buffer_start += 2;
 
 			//skip flag
 			current_pipe_buffer_start += 2;
 
 			byte [] l_seq = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_l_seq = bigToLittleEndian(byteArrayToInt(l_seq,0));
+			int converted_l_seq = Utils.bigToLittleEndian(Utils.byteArrayToInt(l_seq,0));
 			current_pipe_buffer_start += 4;
 			if ((converted_l_seq < MIN_SEQ_LEN)||(converted_l_seq > MAX_SEQ_LEN)){
 				bam_position += 1;
@@ -176,7 +176,7 @@ public class CreateIntervalList{
 				//System.out.println(">>>length: "+converted_l_seq);
 			}
 			byte [] next_refID = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_next_refID = bigToLittleEndian(byteArrayToInt(next_refID,0));
+			int converted_next_refID = Utils.bigToLittleEndian(Utils.byteArrayToInt(next_refID,0));
 			current_pipe_buffer_start += 4;
 			if ((converted_next_refID < -1)||(converted_next_refID > 100)){
 				bam_position += 1;
@@ -187,7 +187,7 @@ public class CreateIntervalList{
 			}
 
 			byte [] next_pos = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_next_pos = bigToLittleEndian(byteArrayToInt(next_pos,0));
+			int converted_next_pos = Utils.bigToLittleEndian(Utils.byteArrayToInt(next_pos,0));
 			current_pipe_buffer_start += 4;
 			if (converted_next_pos < -1){
 				bam_position += 1;
@@ -257,17 +257,17 @@ public class CreateIntervalList{
 
 			byte [] block_size = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 			pipe_buffer_start += 4;
-			int converted_block_size = bigToLittleEndian(byteArrayToInt(block_size,0));
+			int converted_block_size = Utils.bigToLittleEndian(Utils.byteArrayToInt(block_size,0));
 			bam_position += 4;
 			bam_position += converted_block_size;
 
 			byte [] refID = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 			pipe_buffer_start += 4;
-			int converted_refID = bigToLittleEndian(byteArrayToInt(refID,0));
+			int converted_refID = Utils.bigToLittleEndian(Utils.byteArrayToInt(refID,0));
 			
 			byte [] pos = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 			pipe_buffer_start += 4;
-			int converted_pos = bigToLittleEndian(byteArrayToInt(pos,0));
+			int converted_pos = Utils.bigToLittleEndian(Utils.byteArrayToInt(pos,0));
 			
 			if (pipe_buffer_start + converted_block_size-8 >= pipe_buffer_length - 1){
 				bgzf_block_size = readBGZFBlock(in,pipe_buffer_start,pipe_buffer_length,bgzf_position);
@@ -338,7 +338,7 @@ public class CreateIntervalList{
 				bgzf_current_pos = split_start;
 				byte [] bgzf_magic = new byte[4];
 				in.readFully(bgzf_current_pos,bgzf_magic);
-				int int_bgzf_magic = bigToLittleEndian(byteArrayToInt(bgzf_magic,0));
+				int int_bgzf_magic = Utils.bigToLittleEndian(Utils.byteArrayToInt(bgzf_magic,0));
 				bgzf_current_pos += 4;
 
 				if (int_bgzf_magic == 0x04088b1f){
@@ -361,7 +361,7 @@ public class CreateIntervalList{
 			byte [] XLEN = new byte[2];
 			in.readFully(split_start,XLEN);
 			//fos.write(XLEN);
-			short converted_XLEN = bigToLittleEndianShort(byteArrayToShort(XLEN,0));
+			short converted_XLEN = Utils.bigToLittleEndianShort(byteArrayToShort(XLEN,0));
 			int xlen = (int) converted_XLEN & 0x0000ffff;
 			
 			
@@ -378,7 +378,7 @@ public class CreateIntervalList{
 			in.readFully(split_start,BSIZE);
 			//in.readFully(BSIZE);
 			//fos.write(BSIZE);
-			short converted_BSIZE = bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
+			short converted_BSIZE = Utils.bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
 			bsize = (int) (converted_BSIZE & 0x0000ffff);
 			split_start += 2;
 
@@ -394,14 +394,14 @@ public class CreateIntervalList{
 			//in.read(CRC32);
 			in.readFully(split_start,CRC32);
 			//fos.write(CRC32);
-			//int converted_CRC32 = bigToLittleEndian(CRC32);
+			//int converted_CRC32 = Utils.bigToLittleEndian(CRC32);
 			split_start += 4;
 
 			byte [] ISIZE = new byte[4];
 			//in.read(ISIZE);
 			in.readFully(split_start,ISIZE);
 			//fos.write(ISIZE);
-			int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));
+			int converted_ISIZE = Utils.bigToLittleEndian(Utils.byteArrayToInt(ISIZE,0));
 			split_start += 4;
 
 			//unzip compressed contents using inflate method
@@ -435,43 +435,7 @@ public class CreateIntervalList{
 
 		return bsize+1;//return bgzf block size, which is equal to bsize+1
 	}
-
-    public static int bigToLittleEndian(int bigendian) {   
-        ByteBuffer buf = ByteBuffer.allocate(4);   
-        
-        buf.order(ByteOrder.BIG_ENDIAN);   
-        buf.putInt(bigendian);   
-        
-        buf.order(ByteOrder.LITTLE_ENDIAN);   
-        return buf.getInt(0);   
-    } 
-    
-    public static short bigToLittleEndianShort(short bigendian) {   
-        ByteBuffer buf = ByteBuffer.allocate(2);   
-        
-        buf.order(ByteOrder.BIG_ENDIAN);   
-        buf.putShort(bigendian);   
-        
-        buf.order(ByteOrder.LITTLE_ENDIAN);   
-        return buf.getShort(0);   
-    }
-    
-    public static int byteArrayToInt(byte[] b, int offset) {
-        int value = 0;
-        for (int i = 0; i < 4; i++) {
-            int shift = (4 - 1 - i) * 8;
-            value += (b[i + offset] & 0x000000FF) << shift;
-        }
-        return value;
-    }
-    public static short byteArrayToShort(byte[] b,int offset) {
-        int value = 0;
-        for (int i = 0; i < 2; i++) {
-            int shift = (2 - 1 - i) * 8;
-            value += (b[i + offset] & 0x000000FF) << shift;
-        }
-        return (short)value;
-    }    
+   
 
 }
 

@@ -86,7 +86,7 @@ public class ReadBGZFBlock{
 					byte [] XLEN = new byte[2];
 					//in.read(XLEN);
 					in.readFully(XLEN);
-					short converted_XLEN = bigToLittleEndianShort(byteArrayToShort(XLEN,0));
+					short converted_XLEN = Utils.bigToLittleEndianShort(byteArrayToShort(XLEN,0));
 					int xlen = (int) converted_XLEN & 0x0000ffff;
 					
 					byte [] sub = new byte[4];
@@ -96,7 +96,7 @@ public class ReadBGZFBlock{
 					byte [] BSIZE = new byte[2];
 					//in.read(BSIZE);
 					in.readFully(BSIZE);
-					short converted_BSIZE = bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
+					short converted_BSIZE = Utils.bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
 					bsize = (int) (converted_BSIZE & 0x0000ffff);
 					current_bgzf_pos = current_bgzf_pos + bsize + 1;
 					
@@ -109,12 +109,12 @@ public class ReadBGZFBlock{
 					byte [] CRC32 = new byte[4];
 					//in.read(CRC32);
 					in.readFully(CRC32);
-					//int converted_CRC32 = bigToLittleEndian(CRC32);
+					//int converted_CRC32 = Utils.bigToLittleEndian(CRC32);
 					
 					byte [] ISIZE = new byte[4];
 					//in.read(ISIZE);
 					in.readFully(ISIZE);
-					int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));
+					int converted_ISIZE = Utils.bigToLittleEndian(byteArrayToInt(ISIZE,0));
 
 					//unzip compressed contents using inflate method
 					Inflater decompresser = new Inflater(true);//must use true here, since by default BAM do not include the zlib header
@@ -174,7 +174,7 @@ public class ReadBGZFBlock{
 						//in.read(XLEN);
 						in.readFully(XLEN);
 						fos.write(XLEN);
-						short converted_XLEN = bigToLittleEndianShort(byteArrayToShort(XLEN,0));
+						short converted_XLEN = Utils.bigToLittleEndianShort(byteArrayToShort(XLEN,0));
 						int xlen = (int) converted_XLEN & 0x0000ffff;
 						
 						byte [] sub = new byte[4];
@@ -185,7 +185,7 @@ public class ReadBGZFBlock{
 						byte [] BSIZE = new byte[2];
 						in.readFully(BSIZE);
 						fos.write(BSIZE);
-						short converted_BSIZE = bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
+						short converted_BSIZE = Utils.bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
 						bsize = (int) (converted_BSIZE & 0x0000ffff);
 						current_bgzf_pos = current_bgzf_pos + bsize + 1;
 		
@@ -201,13 +201,13 @@ public class ReadBGZFBlock{
 						//in.read(CRC32);
 						in.readFully(CRC32);
 						fos.write(CRC32);
-						//int converted_CRC32 = bigToLittleEndian(CRC32);
+						//int converted_CRC32 = Utils.bigToLittleEndian(CRC32);
 						
 						byte [] ISIZE = new byte[4];
 						//in.read(ISIZE);
 						in.readFully(ISIZE);
 						fos.write(ISIZE);
-						int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));
+						int converted_ISIZE = Utils.bigToLittleEndian(byteArrayToInt(ISIZE,0));
 		
 					}
 					if(current_bgzf_pos == bgzf_pos){
@@ -222,7 +222,7 @@ public class ReadBGZFBlock{
 					byte [] XLEN = new byte[2];
 					//in.read(XLEN);
 					in.readFully(XLEN);
-					short converted_XLEN = bigToLittleEndianShort(byteArrayToShort(XLEN,0));
+					short converted_XLEN = Utils.bigToLittleEndianShort(byteArrayToShort(XLEN,0));
 					int xlen = (int) converted_XLEN & 0x0000ffff;
 				
 					byte [] sub = new byte[4];
@@ -232,7 +232,7 @@ public class ReadBGZFBlock{
 					byte [] BSIZE = new byte[2];
 					//in.read(BSIZE);
 					in.readFully(BSIZE);
-					short converted_BSIZE = bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
+					short converted_BSIZE = Utils.bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
 					bsize = (int) (converted_BSIZE & 0x0000ffff);
 					//System.out.println(">BSIZE:"+bsize+"<");
 					current_bgzf_pos = current_bgzf_pos + bsize + 1;
@@ -246,12 +246,12 @@ public class ReadBGZFBlock{
 					byte [] CRC32 = new byte[4];
 					//in.read(CRC32);
 					in.readFully(CRC32);
-					//int converted_CRC32 = bigToLittleEndian(CRC32);
+					//int converted_CRC32 = Utils.bigToLittleEndian(CRC32);
 				
 					byte [] ISIZE = new byte[4];
 					//in.read(ISIZE);
 					in.readFully(ISIZE);
-					int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));
+					int converted_ISIZE = Utils.bigToLittleEndian(byteArrayToInt(ISIZE,0));
 		
 					//unzip compressed contents using inflate method
 					Inflater decompresser = new Inflater(true);//must use true here, since by default BAM do not include the zlib header
@@ -332,7 +332,7 @@ public class ReadBGZFBlock{
 	
 			byte [] XLEN = new byte[2];
 			in.read(XLEN);
-			short converted_XLEN = bigToLittleEndianShort(byteArrayToShort(XLEN,0));
+			short converted_XLEN = Utils.bigToLittleEndianShort(byteArrayToShort(XLEN,0));
 			int xlen = (int) converted_XLEN & 0x0000ffff;
 			
 			byte [] sub = new byte[4];
@@ -340,7 +340,7 @@ public class ReadBGZFBlock{
 	
 			byte [] BSIZE = new byte[2];
 			in.read(BSIZE);
-			short converted_BSIZE = bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
+			short converted_BSIZE = Utils.bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
 			int bsize = (int) (converted_BSIZE & 0x0000ffff);
 	
 			//process compressed contents
@@ -350,11 +350,11 @@ public class ReadBGZFBlock{
 			//process the remaining zip metadata
 			byte [] CRC32 = new byte[4];
 			in.read(CRC32);
-			//int converted_CRC32 = bigToLittleEndian(CRC32);
+			//int converted_CRC32 = Utils.bigToLittleEndian(CRC32);
 			
 			byte [] ISIZE = new byte[4];
 			in.read(ISIZE);
-			int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));			
+			int converted_ISIZE = Utils.bigToLittleEndian(byteArrayToInt(ISIZE,0));			
 			
 			//unzip compressed contents using inflate method
 			Inflater decompresser = new Inflater(true);//must use true here, since by default BAM do not include the zlib header
@@ -370,19 +370,19 @@ public class ReadBGZFBlock{
 			
 			byte [] l_text = Arrays.copyOfRange(content, bam_head_len, bam_head_len+4);
 			bam_head_len += 4;
-			int converted_l_text = bigToLittleEndian(byteArrayToInt(l_text,0));
+			int converted_l_text = Utils.bigToLittleEndian(byteArrayToInt(l_text,0));
 			
 			byte [] text = Arrays.copyOfRange(content, bam_head_len, bam_head_len+converted_l_text);
 			bam_head_len += converted_l_text;
 			     
 			byte [] n_ref = Arrays.copyOfRange(content, bam_head_len, bam_head_len+4);
 			bam_head_len += 4;
-			int converted_n_ref = bigToLittleEndian(byteArrayToInt(n_ref,0));
+			int converted_n_ref = Utils.bigToLittleEndian(byteArrayToInt(n_ref,0));
 	
 			for (int i=0;i<converted_n_ref;i++){
 				byte [] l_name = Arrays.copyOfRange(content, bam_head_len, bam_head_len+4);
 				bam_head_len += 4;
-				int converted_l_name = bigToLittleEndian(byteArrayToInt(l_name,0));
+				int converted_l_name = Utils.bigToLittleEndian(byteArrayToInt(l_name,0));
 				
 				byte [] name = Arrays.copyOfRange(content, bam_head_len, bam_head_len+converted_l_name);
 				bam_head_len += converted_l_name;
@@ -399,55 +399,7 @@ public class ReadBGZFBlock{
 		return bam_head;
 	}
 
-    public static int bigToLittleEndian(int bigendian) {   
-        ByteBuffer buf = ByteBuffer.allocate(4);   
-        buf.order(ByteOrder.BIG_ENDIAN);   
-        buf.putInt(bigendian);   
-        buf.order(ByteOrder.LITTLE_ENDIAN);   
-        return buf.getInt(0);   
-    } 
-    
-    public static short bigToLittleEndianShort(short bigendian) {   
-        ByteBuffer buf = ByteBuffer.allocate(2);   
-        buf.order(ByteOrder.BIG_ENDIAN);   
-        buf.putShort(bigendian);   
-        buf.order(ByteOrder.LITTLE_ENDIAN);   
-        return buf.getShort(0);   
-    }
-    
-    public static int byteArrayToInt(byte[] b, int offset) {
-        int value = 0;
-        for (int i = 0; i < 4; i++) {
-            int shift = (4 - 1 - i) * 8;
-            value += (b[i + offset] & 0x000000FF) << shift;
-        }
-        return value;
-    }
-    
-    public static short byteArrayToShort(byte[] b,int offset) {
-        int value = 0;
-        for (int i = 0; i < 2; i++) {
-            int shift = (2 - 1 - i) * 8;
-            value += (b[i + offset] & 0x000000FF) << shift;
-        }
-        return (short)value;
-    }
 
-    public static byte [] intToByteArray(int number){//little endian
-    	byte [] byteArray = new byte[4];
-    	byteArray[3] = (byte)((number >> 24) & 0xFF);
-    	byteArray[2] = (byte)((number >> 16) & 0xFF);
-    	byteArray[1] = (byte)((number >> 8) & 0xFF);
-    	byteArray[0] = (byte)(number & 0xFF);
-    	return byteArray;
-    }
-
-    public static byte [] intToByteArray(int number, int len){//little endian
-    	byte [] byteArray = new byte[2];
-    	byteArray[1] = (byte)((number >> 8) & 0xFF);
-    	byteArray[0] = (byte)(number & 0xFF);
-    	return byteArray;
-    }
 }
 
 

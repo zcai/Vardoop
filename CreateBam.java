@@ -81,7 +81,7 @@ public class CreateBam{
 					
 					byte [] l_text = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 					pipe_buffer_start += 4;
-					int converted_l_text = bigToLittleEndian(byteArrayToInt(l_text,0));
+					int converted_l_text = bigToLittleEndian(Utils.byteArrayToInt(l_text,0));
 					bam_position += 4;
 					
 					byte [] text = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+converted_l_text);
@@ -90,13 +90,13 @@ public class CreateBam{
 						   
 					byte [] n_ref = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 					pipe_buffer_start += 4;
-					int converted_n_ref = bigToLittleEndian(byteArrayToInt(n_ref,0));
+					int converted_n_ref = bigToLittleEndian(Utils.byteArrayToInt(n_ref,0));
 					bam_position += 4;
 					
 					for (int i=0;i<converted_n_ref;i++){
 						byte [] l_name = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 						pipe_buffer_start += 4;
-						int converted_l_name = bigToLittleEndian(byteArrayToInt(l_name,0));
+						int converted_l_name = bigToLittleEndian(Utils.byteArrayToInt(l_name,0));
 						bam_position += 4;
 
 						byte [] name = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+converted_l_name);
@@ -105,7 +105,7 @@ public class CreateBam{
 						
 						byte [] l_ref = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 						pipe_buffer_start += 4;
-						int converted_l_ref = bigToLittleEndian(byteArrayToInt(l_ref,0));
+						int converted_l_ref = bigToLittleEndian(Utils.byteArrayToInt(l_ref,0));
 						bam_position += 4;
 					}
 				}
@@ -118,7 +118,7 @@ public class CreateBam{
 
 			current_pipe_buffer_start = pipe_buffer_start;
 			byte [] bam_block_size = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_bam_block_size = bigToLittleEndian(byteArrayToInt(bam_block_size,0));
+			int converted_bam_block_size = bigToLittleEndian(Utils.byteArrayToInt(bam_block_size,0));
 			current_pipe_buffer_start += 4;
 			if (converted_bam_block_size < 0){
 				bam_position += 1;
@@ -127,7 +127,7 @@ public class CreateBam{
 			}
 
 			byte [] refID = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_refID = bigToLittleEndian(byteArrayToInt(refID,0));
+			int converted_refID = bigToLittleEndian(Utils.byteArrayToInt(refID,0));
 			current_pipe_buffer_start += 4;
 			if ((converted_refID < -1)||(converted_refID > 100)){
 				bam_position += 1;
@@ -136,7 +136,7 @@ public class CreateBam{
 			}
 
 			byte [] pos = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_pos = bigToLittleEndian(byteArrayToInt(pos,0));
+			int converted_pos = bigToLittleEndian(Utils.byteArrayToInt(pos,0));
 			current_pipe_buffer_start += 4;
 			if (converted_pos < -1){
 				bam_position += 1;
@@ -159,7 +159,7 @@ public class CreateBam{
 			current_pipe_buffer_start += 2;
 
 			byte [] l_seq = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_l_seq = bigToLittleEndian(byteArrayToInt(l_seq,0));
+			int converted_l_seq = bigToLittleEndian(Utils.byteArrayToInt(l_seq,0));
 			current_pipe_buffer_start += 4;
 			if ((converted_l_seq < MIN_SEQ_LEN)||(converted_l_seq > MAX_SEQ_LEN)){
 				bam_position += 1;
@@ -168,7 +168,7 @@ public class CreateBam{
 			}
 
 			byte [] next_refID = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_next_refID = bigToLittleEndian(byteArrayToInt(next_refID,0));
+			int converted_next_refID = bigToLittleEndian(Utils.byteArrayToInt(next_refID,0));
 			current_pipe_buffer_start += 4;
 			if ((converted_next_refID < -1)||(converted_next_refID > 100)){
 				bam_position += 1;
@@ -177,7 +177,7 @@ public class CreateBam{
 			}
 
 			byte [] next_pos = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-			int converted_next_pos = bigToLittleEndian(byteArrayToInt(next_pos,0));
+			int converted_next_pos = bigToLittleEndian(Utils.byteArrayToInt(next_pos,0));
 			current_pipe_buffer_start += 4;
 			if (converted_next_pos < -1){
 				bam_position += 1;
@@ -241,7 +241,7 @@ public class CreateBam{
 				while (true){
 					current_pipe_buffer_start = pipe_buffer_start;
 					byte [] bam_block_size = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-					int converted_bam_block_size = bigToLittleEndian(byteArrayToInt(bam_block_size,0));
+					int converted_bam_block_size = bigToLittleEndian(Utils.byteArrayToInt(bam_block_size,0));
 					current_pipe_buffer_start += 4;
 					if (converted_bam_block_size < 0){
 						bam_position += 1;
@@ -250,7 +250,7 @@ public class CreateBam{
 					}
 
 					byte [] refID = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-					int converted_refID = bigToLittleEndian(byteArrayToInt(refID,0));
+					int converted_refID = bigToLittleEndian(Utils.byteArrayToInt(refID,0));
 					current_pipe_buffer_start += 4;
 					if ((converted_refID < -1)||(converted_refID > 100)){
 						bam_position += 1;
@@ -259,7 +259,7 @@ public class CreateBam{
 					}
 
 					byte [] pos = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-					int converted_pos = bigToLittleEndian(byteArrayToInt(pos,0));
+					int converted_pos = bigToLittleEndian(Utils.byteArrayToInt(pos,0));
 					current_pipe_buffer_start += 4;
 					if (converted_pos < 0){
 						bam_position += 1;
@@ -282,7 +282,7 @@ public class CreateBam{
 					current_pipe_buffer_start += 2;
 
 					byte [] l_seq = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-					int converted_l_seq = bigToLittleEndian(byteArrayToInt(l_seq,0));
+					int converted_l_seq = bigToLittleEndian(Utils.byteArrayToInt(l_seq,0));
 					current_pipe_buffer_start += 4;
 					if ((converted_l_seq < MIN_SEQ_LEN)||(converted_l_seq > MAX_SEQ_LEN)){
 						bam_position += 1;
@@ -291,7 +291,7 @@ public class CreateBam{
 					}
 
 					byte [] next_refID = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-					int converted_next_refID = bigToLittleEndian(byteArrayToInt(next_refID,0));
+					int converted_next_refID = bigToLittleEndian(Utils.byteArrayToInt(next_refID,0));
 					current_pipe_buffer_start += 4;
 					if ((converted_next_refID < -1)||(converted_next_refID > 100)){
 						bam_position += 1;
@@ -300,7 +300,7 @@ public class CreateBam{
 					}
 
 					byte [] next_pos = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
-					int converted_next_pos = bigToLittleEndian(byteArrayToInt(next_pos,0));
+					int converted_next_pos = bigToLittleEndian(Utils.byteArrayToInt(next_pos,0));
 					current_pipe_buffer_start += 4;
 					if (converted_next_pos < 0){
 						bam_position += 1;
@@ -359,7 +359,7 @@ public class CreateBam{
 				bgzf_current_pos = split_start;
 				byte [] bgzf_magic = new byte[4];
 				in.readFully(bgzf_current_pos,bgzf_magic);
-				int int_bgzf_magic = bigToLittleEndian(byteArrayToInt(bgzf_magic,0));
+				int int_bgzf_magic = bigToLittleEndian(Utils.byteArrayToInt(bgzf_magic,0));
 				bgzf_current_pos += 4;
 
 				if (int_bgzf_magic == 0x04088b1f){
@@ -413,7 +413,7 @@ public class CreateBam{
 
 			byte [] ISIZE = new byte[4];
 			in.readFully(split_start,ISIZE);
-			int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));
+			int converted_ISIZE = bigToLittleEndian(Utils.byteArrayToInt(ISIZE,0));
 			System.out.println(">ISIZE:"+new Long((long) (converted_ISIZE & 0x00000000ffffffffl)).toString()+"<");
 			split_start += 4;
 
@@ -449,42 +449,6 @@ public class CreateBam{
 		return bsize+1;//return bgzf block size, which is equal to bsize+1
 	}
 
-    public static int bigToLittleEndian(int bigendian) {   
-        ByteBuffer buf = ByteBuffer.allocate(4);   
-        
-        buf.order(ByteOrder.BIG_ENDIAN);   
-        buf.putInt(bigendian);   
-        
-        buf.order(ByteOrder.LITTLE_ENDIAN);   
-        return buf.getInt(0);   
-    } 
-    
-    public static short bigToLittleEndianShort(short bigendian) {   
-        ByteBuffer buf = ByteBuffer.allocate(2);   
-        
-        buf.order(ByteOrder.BIG_ENDIAN);   
-        buf.putShort(bigendian);   
-        
-        buf.order(ByteOrder.LITTLE_ENDIAN);   
-        return buf.getShort(0);   
-    }
-    
-    public static int byteArrayToInt(byte[] b, int offset) {
-        int value = 0;
-        for (int i = 0; i < 4; i++) {
-            int shift = (4 - 1 - i) * 8;
-            value += (b[i + offset] & 0x000000FF) << shift;
-        }
-        return value;
-    }
-    public static short byteArrayToShort(byte[] b,int offset) {
-        int value = 0;
-        for (int i = 0; i < 2; i++) {
-            int shift = (2 - 1 - i) * 8;
-            value += (b[i + offset] & 0x000000FF) << shift;
-        }
-        return (short)value;
-    }    
 
 }
 
