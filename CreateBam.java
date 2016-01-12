@@ -68,6 +68,7 @@ public class CreateBam{
 		int MIN_SEQ_LEN = 30;
 		int current_pipe_buffer_start = 0;
 		int check_first_split = 0;//check if it is the first split with bam head
+		
 		//guess bam alignment start
 		while (true){
 			if (check_first_split == 0){
@@ -78,67 +79,44 @@ public class CreateBam{
 					pipe_buffer_start += 4;
 					bam_position += 4;
 					
-					//byte [] l_text = new byte[4];
-					//din.read(l_text);
 					byte [] l_text = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 					pipe_buffer_start += 4;
 					int converted_l_text = bigToLittleEndian(byteArrayToInt(l_text,0));
-					//System.out.println(">l_text:"+converted_l_text);
 					bam_position += 4;
 					
-					//byte [] text = new byte[converted_l_text];
-					//din.read(text);
 					byte [] text = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+converted_l_text);
 					pipe_buffer_start += converted_l_text;
-					//System.out.println(">text:"+new String(text));
 					bam_position += converted_l_text;
 						   
-					//byte [] n_ref = new byte[4];  
-					//din.read(n_ref);
 					byte [] n_ref = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 					pipe_buffer_start += 4;
 					int converted_n_ref = bigToLittleEndian(byteArrayToInt(n_ref,0));
-					//System.out.println(">n_ref:"+converted_n_ref);
 					bam_position += 4;
 					
 					for (int i=0;i<converted_n_ref;i++){
-						//byte [] l_name = new byte[4];
-						//din.read(l_name);
 						byte [] l_name = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 						pipe_buffer_start += 4;
 						int converted_l_name = bigToLittleEndian(byteArrayToInt(l_name,0));
-						//System.out.println(">l_name:"+converted_l_name);
 						bam_position += 4;
 
-						//byte [] name = new byte[converted_l_name];
-						//din.read(name);
 						byte [] name = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+converted_l_name);
 						pipe_buffer_start += converted_l_name;
-						//System.out.println(">name:"+new String(name));
 						bam_position += converted_l_name;
 						
-						//byte [] l_ref = new byte[4];
-						//din.read(l_ref);
 						byte [] l_ref = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 						pipe_buffer_start += 4;
 						int converted_l_ref = bigToLittleEndian(byteArrayToInt(l_ref,0));
-						//System.out.println(">l_ref:"+converted_l_ref);
 						bam_position += 4;
 					}
-					//System.out.println(bam_length+"---"+bam_position);
-					//break;
 				}
 			}
 
-			//if (bam_position + 4 >= bam_length -1 ){
 			if (bam_position + 32 >= bam_length -1 ){
 				bgzf_block_size = readBGZFBlock(in,pipe_buffer_start,pipe_buffer_length,bgzf_position);
 				bgzf_position += bgzf_block_size;
 			}
 
-			//System.out.println("pipe_buffer_start: "+pipe_buffer_start+" pipe_buffer_length: "+pipe_buffer_length);
 			current_pipe_buffer_start = pipe_buffer_start;
-			//System.out.println("pipe_buffer_start: "+pipe_buffer_start);
 			byte [] bam_block_size = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
 			int converted_bam_block_size = bigToLittleEndian(byteArrayToInt(bam_block_size,0));
 			current_pipe_buffer_start += 4;
@@ -184,7 +162,6 @@ public class CreateBam{
 			int converted_l_seq = bigToLittleEndian(byteArrayToInt(l_seq,0));
 			current_pipe_buffer_start += 4;
 			if ((converted_l_seq < MIN_SEQ_LEN)||(converted_l_seq > MAX_SEQ_LEN)){
-				//System.out.println("converted_l_seq: "+converted_l_seq);
 				bam_position += 1;
 				pipe_buffer_start += 1;
 				continue;
@@ -211,12 +188,8 @@ public class CreateBam{
 			//skip tlen
 			current_pipe_buffer_start += 4;
 
-			//byte [] read_name = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+converted_l_read_name);
-			//String str_read_name = (new String((new String(read_name)).toCharArray()));
-
 			byte [] read_name_last_char = null;
 			if ((pipe_buffer_start+converted_l_read_name >= 1)&&(pipe_buffer_start+converted_l_read_name <= pipe_buffer_length)){
-				//System.out.println(">>>>>>>>>>>>>pipe_buffer_start+converted_l_read_name: "+(pipe_buffer_start+converted_l_read_name));
 				read_name_last_char = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start+converted_l_read_name-1, current_pipe_buffer_start+converted_l_read_name);
 			}else{
 				bam_position += 1;
@@ -231,19 +204,10 @@ public class CreateBam{
 
 			//guess bam alignment record, need to work on it
 			if (converted_bam_block_size > 32+l_read_name.length+4*converted_n_cigar_op+(3*converted_l_seq+1)/2){
-				System.out.println(">>>>>>>>>>>>>>>read_name_last_char[0] "+read_name_last_char[0]);
-				System.out.println(">>>>>>>>>>>>>>>converted_l_seq "+converted_l_seq);
-				System.out.println(">>>>>>>>>>>>>>>converted bam block size "+converted_bam_block_size);
 				System.out.println("bam record found");
-				System.out.println(">>>>>>>>>>>>>>>converted_pos: "+converted_pos);
-				System.out.println(">>>>>>>>>>>>>>>converted_next_pos: "+converted_next_pos);
-				System.out.println(">>>>>>>>>>>>>>>converted_refID: "+converted_refID);
-				System.out.println(">>>>>>>>>>>>>>>converted_next_refID: "+converted_next_refID);
-				//
+
 				previous_bgzf_position = bgzf_position - bgzf_block_size;
-				//part_previous_size = (int)(bam_length - bam_position)+converted_bam_block_size+4;
 				part_previous_size = (int)(bam_length - bam_position);
-				System.out.println("bam start: "+previous_bgzf_position+"\t"+part_previous_size);
 				return_values[0] = previous_bgzf_position;
 				return_values[1] = part_previous_size;
 				break;
@@ -275,9 +239,7 @@ public class CreateBam{
 				bgzf_position += bgzf_block_size;
 				//guess bam alignment end
 				while (true){
-					//System.out.println("pipe_buffer_start: "+pipe_buffer_start+" pipe_buffer_length: "+pipe_buffer_length);
 					current_pipe_buffer_start = pipe_buffer_start;
-					//System.out.println("pipe_buffer_start: "+pipe_buffer_start);
 					byte [] bam_block_size = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
 					int converted_bam_block_size = bigToLittleEndian(byteArrayToInt(bam_block_size,0));
 					current_pipe_buffer_start += 4;
@@ -323,7 +285,6 @@ public class CreateBam{
 					int converted_l_seq = bigToLittleEndian(byteArrayToInt(l_seq,0));
 					current_pipe_buffer_start += 4;
 					if ((converted_l_seq < MIN_SEQ_LEN)||(converted_l_seq > MAX_SEQ_LEN)){
-						//System.out.println("converted_l_seq: "+converted_l_seq);
 						bam_position += 1;
 						pipe_buffer_start += 1;
 						continue;
@@ -350,12 +311,8 @@ public class CreateBam{
 					//skip tlen
 					current_pipe_buffer_start += 4;
 
-					//byte [] read_name = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+converted_l_read_name);
-					//String str_read_name = (new String((new String(read_name)).toCharArray()));
-
 					byte [] read_name_last_char = null;
 					if ((pipe_buffer_start+converted_l_read_name > 1)&&(pipe_buffer_start+converted_l_read_name < pipe_buffer_length)){
-						//System.out.println(">>>>>>>>>>>>>pipe_buffer_start+converted_l_read_name: "+(pipe_buffer_start+converted_l_read_name));
 						read_name_last_char = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start+converted_l_read_name-1, current_pipe_buffer_start+converted_l_read_name);
 					}else{
 						bam_position += 1;
@@ -370,17 +327,8 @@ public class CreateBam{
 
 					//guess bam alignment record, need to work on it
 					if (converted_bam_block_size > 32+l_read_name.length+4*converted_n_cigar_op+(3*converted_l_seq+1)/2){
-						System.out.println("***************read_name_last_char[0] "+read_name_last_char[0]);
-						System.out.println("***************converted_l_seq "+converted_l_seq);
-						System.out.println("***************converted bam block size "+converted_bam_block_size);
 						System.out.println("bam record found");
-						System.out.println("***************converted_pos: "+converted_pos);
-						System.out.println("***************converted_next_pos: "+converted_next_pos);
-						System.out.println("***************converted_refID: "+converted_refID);
-						System.out.println("***************converted_next_refID: "+converted_next_refID);
-						//
 						previous_bgzf_position = bgzf_position - bgzf_block_size;
-						//part_next_size = (int)(bam_position)-converted_bam_block_size-4;
 						part_next_size = (int)(bam_position);
 						System.out.println("bam end: "+previous_bgzf_position+"\t"+part_next_size);
 						return_values[2] = previous_bgzf_position;
@@ -403,7 +351,6 @@ public class CreateBam{
 	}
 	
 	private int readBGZFBlock(FSDataInputStream in, int buffer_position, int buffer_length,long split_start){
-		//System.out.println(buffer_position+" "+buffer_length+" "+split_start);
 		long bgzf_current_pos = 0;
 		pipe_buffer_start = 0;
 		int bsize = 0;
@@ -434,10 +381,8 @@ public class CreateBam{
 
 			byte [] XLEN = new byte[2];
 			in.readFully(split_start,XLEN);
-			//fos.write(XLEN);
 			short converted_XLEN = bigToLittleEndianShort(byteArrayToShort(XLEN,0));
 			int xlen = (int) converted_XLEN & 0x0000ffff;
-			//System.out.println(">XLEN:"+xlen+"<");
 			
 			
 			/*
@@ -451,33 +396,23 @@ public class CreateBam{
 
 			byte [] BSIZE = new byte[2];
 			in.readFully(split_start,BSIZE);
-			//in.readFully(BSIZE);
-			//fos.write(BSIZE);
 			short converted_BSIZE = bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
 			bsize = (int) (converted_BSIZE & 0x0000ffff);
-			System.out.println(">from CreateBam.java BSIZE:"+bsize+"<");
 			split_start += 2;
 
 			//process compressed contents
 			byte [] CDATA = new byte[bsize-xlen-19];
 			//int r = in.read(CDATA);
 			in.readFully(split_start,CDATA);
-			//fos.write(CDATA);
 			split_start += bsize-xlen-19;
 
 			//process the remaining zip metadata
 			byte [] CRC32 = new byte[4];
-			//in.read(CRC32);
 			in.readFully(split_start,CRC32);
-			//fos.write(CRC32);
-			//int converted_CRC32 = bigToLittleEndian(CRC32);
-			//System.out.println(">CRC32:"+new Long((long) (converted_CRC32 & 0x00000000ffffffffl)).toString()+"<");
 			split_start += 4;
 
 			byte [] ISIZE = new byte[4];
-			//in.read(ISIZE);
 			in.readFully(split_start,ISIZE);
-			//fos.write(ISIZE);
 			int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));
 			System.out.println(">ISIZE:"+new Long((long) (converted_ISIZE & 0x00000000ffffffffl)).toString()+"<");
 			split_start += 4;

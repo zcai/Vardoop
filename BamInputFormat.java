@@ -53,7 +53,6 @@ import org.apache.hadoop.util.LineReader;
 @InterfaceStability.Stable
 public class BamInputFormat extends FileInputFormat<Text, Text> { 
 	public static final String LINES_PER_MAP = "mapreduce.input.lineinputformat.linespermap";
-	////////////////////////////////////////////////
 	private static byte [] pipe_buffer = null;
 	private static int pipe_buffer_length = 0;
 	private static long bam_position = 0;

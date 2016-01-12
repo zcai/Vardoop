@@ -71,20 +71,9 @@ public class BamRecordReader extends RecordReader<Text, Text> {
 		System.out.println("start: "+start);
 		System.out.println("split_length: "+split_length);
 		fileInfo = split.getPath();
-		//String fileName = fileInfo.toString().split("-")[0];
-		//Path file = new Path(fileName);
-		//compressionCodecs = new CompressionCodecFactory(job);
-		//final CompressionCodec codec = compressionCodecs.getCodec(file);
-
-		// open the file and seek to the start of the split
-		//FileSystem fs = file.getFileSystem(job);
-		//fileIn = fs.open(file);
-		//fileIn.seek(start);
-		//this.pos = start;
 	}
 
 	public boolean nextKeyValue() throws IOException {//must return false when no input data available
-		System.out.println(">>>"+start);
 		if (key == null) {
 			key = new Text();
 		}
@@ -130,9 +119,9 @@ public class BamRecordReader extends RecordReader<Text, Text> {
 		}
 	}
 	public synchronized void close() throws IOException {
-		//if (in != null) {
-		//	in.close();
-		//}
+		if (in != null) {
+			in.close();
+		}
 	}
 
 }

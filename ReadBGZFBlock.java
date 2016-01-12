@@ -48,14 +48,12 @@ public class ReadBGZFBlock{
 					//the first bgzf block, which contains only the bam dead
 					//write gzip head for bam head
 					int bam_head_len = readBamHead(input_bam_file,job).getLength();
-					//System.out.println("bam_head_len: "+bam_head_len);
 					byte [] compressed_bam_head = new byte[bam_head_len];
 					Deflater compresserHead = new Deflater(Deflater.DEFAULT_COMPRESSION,true);//BAM does not use wrap,so must use this constructor here
 					compresserHead.setInput(head,0,bam_head_len);
 					compresserHead.finish();
 					int out_len2 = compresserHead.deflate(compressed_bam_head);
 					compresserHead.end();//should not use compresser.finish();
-					//System.out.println("compressed length: "+out_len2);
 		
 					byte [] bgzf_head = new byte[] {0x1f,(byte)0x8b,(byte)0x08,0x04};
 					fos.write(bgzf_head);
@@ -67,7 +65,6 @@ public class ReadBGZFBlock{
 					fos.write(SLEN_head);
 			
 					byte [] add_BZISE_head = intToByteArray(out_len2+19+6,2);//6 is XLEN
-					//System.out.println("(((((((("+(out_len+19+6));
 					fos.write(add_BZISE_head);
 			
 					fos.write(compressed_bam_head,0,out_len2);//write bam head content
@@ -91,7 +88,6 @@ public class ReadBGZFBlock{
 					in.readFully(XLEN);
 					short converted_XLEN = bigToLittleEndianShort(byteArrayToShort(XLEN,0));
 					int xlen = (int) converted_XLEN & 0x0000ffff;
-					//System.out.println(">XLEN:"+xlen+"<");
 					
 					byte [] sub = new byte[4];
 					//in.read(sub);
@@ -102,7 +98,6 @@ public class ReadBGZFBlock{
 					in.readFully(BSIZE);
 					short converted_BSIZE = bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
 					bsize = (int) (converted_BSIZE & 0x0000ffff);
-					//System.out.println(">BSIZE:"+bsize+"<");
 					current_bgzf_pos = current_bgzf_pos + bsize + 1;
 					
 					//process compressed contents
@@ -115,13 +110,11 @@ public class ReadBGZFBlock{
 					//in.read(CRC32);
 					in.readFully(CRC32);
 					//int converted_CRC32 = bigToLittleEndian(CRC32);
-					//System.out.println(">CRC32:"+new Long((long) (converted_CRC32 & 0x00000000ffffffffl)).toString()+"<");
 					
 					byte [] ISIZE = new byte[4];
 					//in.read(ISIZE);
 					in.readFully(ISIZE);
 					int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));
-					//System.out.println(">ISIZE:"+new Long((long) (converted_ISIZE & 0x00000000ffffffffl)).toString()+"<");
 
 					//unzip compressed contents using inflate method
 					Inflater decompresser = new Inflater(true);//must use true here, since by default BAM do not include the zlib header
@@ -132,7 +125,6 @@ public class ReadBGZFBlock{
 					byte [] first_part = new byte[first_pos];
 					
 					first_part = Arrays.copyOfRange(content, converted_ISIZE-first_pos, converted_ISIZE);
-					//System.out.println(converted_ISIZE-first_pos+"--"+converted_ISIZE);
 					
 					Deflater compresser = new Deflater(Deflater.DEFAULT_COMPRESSION,true);//BAM does not use wrap,so must use this constructor here
 					byte [] buffer = new byte[converted_ISIZE];
@@ -140,8 +132,6 @@ public class ReadBGZFBlock{
 					compresser.finish();
 		
 					int out_len = compresser.deflate(buffer);
-					//System.out.println(out_len);
-					//System.out.println(new String(buffer));
 					compresser.end();//should not use compresser.finish();
 
 					if (first_pos != 0){//the first bgzf block contains empty, skip this section, otherwise an empty bam block will be written which indicates the end of the bam file	
@@ -156,7 +146,6 @@ public class ReadBGZFBlock{
 						fos.write(SLEN);
 						
 						byte [] add_BZISE = intToByteArray(out_len+19+6,2);//6 is XLEN
-						//System.out.println("(((((((("+(out_len+19+6));
 						fos.write(add_BZISE);
 						
 						fos.write(buffer,0,out_len);//write bam content
@@ -168,7 +157,6 @@ public class ReadBGZFBlock{
 						
 						byte [] add_ISIZE = intToByteArray(first_part.length);
 						fos.write(add_ISIZE);
-						//System.out.println("------------------------"+first_part.length);
 					}
 
 					count = 1;
@@ -188,21 +176,17 @@ public class ReadBGZFBlock{
 						fos.write(XLEN);
 						short converted_XLEN = bigToLittleEndianShort(byteArrayToShort(XLEN,0));
 						int xlen = (int) converted_XLEN & 0x0000ffff;
-						//System.out.println(">XLEN:"+xlen+"<");
 						
 						byte [] sub = new byte[4];
-						//in.read(sub);
 						in.readFully(sub);
 						fos.write(sub);
 		
 						 
 						byte [] BSIZE = new byte[2];
-						//in.read(BSIZE);
 						in.readFully(BSIZE);
 						fos.write(BSIZE);
 						short converted_BSIZE = bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
 						bsize = (int) (converted_BSIZE & 0x0000ffff);
-						//System.out.println(">BSIZE:"+bsize+"<");
 						current_bgzf_pos = current_bgzf_pos + bsize + 1;
 		
 						//process compressed contents
@@ -218,14 +202,12 @@ public class ReadBGZFBlock{
 						in.readFully(CRC32);
 						fos.write(CRC32);
 						//int converted_CRC32 = bigToLittleEndian(CRC32);
-						//System.out.println(">CRC32:"+new Long((long) (converted_CRC32 & 0x00000000ffffffffl)).toString()+"<");
 						
 						byte [] ISIZE = new byte[4];
 						//in.read(ISIZE);
 						in.readFully(ISIZE);
 						fos.write(ISIZE);
 						int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));
-						//System.out.println(">ISIZE:"+new Long((long) (converted_ISIZE & 0x00000000ffffffffl)).toString()+"<");
 		
 					}
 					if(current_bgzf_pos == bgzf_pos){
@@ -242,7 +224,6 @@ public class ReadBGZFBlock{
 					in.readFully(XLEN);
 					short converted_XLEN = bigToLittleEndianShort(byteArrayToShort(XLEN,0));
 					int xlen = (int) converted_XLEN & 0x0000ffff;
-					//System.out.println(">XLEN:"+xlen+"<");
 				
 					byte [] sub = new byte[4];
 					//in.read(sub);
@@ -266,13 +247,11 @@ public class ReadBGZFBlock{
 					//in.read(CRC32);
 					in.readFully(CRC32);
 					//int converted_CRC32 = bigToLittleEndian(CRC32);
-					//System.out.println(">CRC32:"+new Long((long) (converted_CRC32 & 0x00000000ffffffffl)).toString()+"<");
 				
 					byte [] ISIZE = new byte[4];
 					//in.read(ISIZE);
 					in.readFully(ISIZE);
 					int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));
-					//System.out.println(">ISIZE:"+new Long((long) (converted_ISIZE & 0x00000000ffffffffl)).toString()+"<");
 		
 					//unzip compressed contents using inflate method
 					Inflater decompresser = new Inflater(true);//must use true here, since by default BAM do not include the zlib header
@@ -316,7 +295,6 @@ public class ReadBGZFBlock{
 					}
 					byte [] EOF = new byte[] {(byte)0x1F,(byte)0x8B,(byte)8,(byte)4,0,0,0,0,0,(byte)0xFF,6,0,(byte)0x42,(byte)0x43,2,0,(byte)0x1B,0,3,0,0,0,0,0,0,0,0,0};
 					fos.write(EOF);            
-					//System.out.println("------------------------");
 					break;
 				}
 			}
@@ -356,7 +334,6 @@ public class ReadBGZFBlock{
 			in.read(XLEN);
 			short converted_XLEN = bigToLittleEndianShort(byteArrayToShort(XLEN,0));
 			int xlen = (int) converted_XLEN & 0x0000ffff;
-			//System.out.println(">XLEN:"+xlen+"<");
 			
 			byte [] sub = new byte[4];
 			in.read(sub);
@@ -365,7 +342,6 @@ public class ReadBGZFBlock{
 			in.read(BSIZE);
 			short converted_BSIZE = bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
 			int bsize = (int) (converted_BSIZE & 0x0000ffff);
-			//System.out.println(">BSIZE:"+bsize+"<");
 	
 			//process compressed contents
 			byte [] CDATA = new byte[bsize-xlen-19];
@@ -375,13 +351,10 @@ public class ReadBGZFBlock{
 			byte [] CRC32 = new byte[4];
 			in.read(CRC32);
 			//int converted_CRC32 = bigToLittleEndian(CRC32);
-			//System.out.println(">CRC32:"+new Long((long) (converted_CRC32 & 0x00000000ffffffffl)).toString()+"<");
 			
 			byte [] ISIZE = new byte[4];
 			in.read(ISIZE);
-			int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));
-			//System.out.println(">ISIZE:"+new Long((long) (converted_ISIZE & 0x00000000ffffffffl)).toString()+"<");
-			
+			int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));			
 			
 			//unzip compressed contents using inflate method
 			Inflater decompresser = new Inflater(true);//must use true here, since by default BAM do not include the zlib header
@@ -420,7 +393,6 @@ public class ReadBGZFBlock{
 			}
 			in.close();
 		}catch(Exception e){}
-		//System.out.println(bam_head_len);
 		bam_head.setLength(bam_head_len);
 		bam_head.setRef(ref_name);
 		//return bam_head_len;

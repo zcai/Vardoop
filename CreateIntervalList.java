@@ -78,14 +78,12 @@ public class CreateIntervalList{
 					byte [] l_text = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 					pipe_buffer_start += 4;
 					int converted_l_text = bigToLittleEndian(byteArrayToInt(l_text,0));
-					//System.out.println(">l_text:"+converted_l_text);
 					bam_position += 4;
 					
 					//byte [] text = new byte[converted_l_text];
 					//din.read(text);
 					byte [] text = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+converted_l_text);
 					pipe_buffer_start += converted_l_text;
-					//System.out.println(">text:"+new String(text));
 					bam_position += converted_l_text;
 						   
 					//byte [] n_ref = new byte[4];  
@@ -93,7 +91,6 @@ public class CreateIntervalList{
 					byte [] n_ref = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 					pipe_buffer_start += 4;
 					int converted_n_ref = bigToLittleEndian(byteArrayToInt(n_ref,0));
-					//System.out.println(">n_ref:"+converted_n_ref);
 					bam_position += 4;
 					
 					for (int i=0;i<converted_n_ref;i++){
@@ -102,14 +99,12 @@ public class CreateIntervalList{
 						byte [] l_name = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 						pipe_buffer_start += 4;
 						int converted_l_name = bigToLittleEndian(byteArrayToInt(l_name,0));
-						//System.out.println(">l_name:"+converted_l_name);
 						bam_position += 4;
 
 						//byte [] name = new byte[converted_l_name];
 						//din.read(name);
 						byte [] name = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+converted_l_name);
 						pipe_buffer_start += converted_l_name;
-						//System.out.println(">name:"+new String(name));
 						bam_position += converted_l_name;
 						
 						//byte [] l_ref = new byte[4];
@@ -117,24 +112,16 @@ public class CreateIntervalList{
 						byte [] l_ref = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 						pipe_buffer_start += 4;
 						int converted_l_ref = bigToLittleEndian(byteArrayToInt(l_ref,0));
-						//System.out.println(">l_ref:"+converted_l_ref);
 						bam_position += 4;
 					}
-					//System.out.println(bam_length+"---"+bam_position);
-					//break;
 				}
 			}
-			//System.out.println(bam_position+"bam_position + 4 >= bam_length - 1"+bam_length);
 			if (bam_position + 4 >= bam_length - 1){//
 				bgzf_block_size = readBGZFBlock(in,pipe_buffer_start,pipe_buffer_length,bgzf_position);
 				bgzf_position += bgzf_block_size;
-				//System.out.println(pipe_buffer_start+"**************"+pipe_buffer_length);
-				//System.out.println(bam_position+"bam_position + 4 >= bam_length - 1"+bam_length);
 			}
-			//System.out.println("pipe_buffer_start: "+pipe_buffer_start+" pipe_buffer_length: "+pipe_buffer_length);
 
 			current_pipe_buffer_start = pipe_buffer_start;
-			//System.out.println("current_pipe_buffer_start: "+current_pipe_buffer_start);
 			byte [] bam_block_size = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start, current_pipe_buffer_start+4);
 			int converted_bam_block_size = bigToLittleEndian(byteArrayToInt(bam_block_size,0));
 			current_pipe_buffer_start += 4;
@@ -182,7 +169,6 @@ public class CreateIntervalList{
 			int converted_l_seq = bigToLittleEndian(byteArrayToInt(l_seq,0));
 			current_pipe_buffer_start += 4;
 			if ((converted_l_seq < MIN_SEQ_LEN)||(converted_l_seq > MAX_SEQ_LEN)){
-				//System.out.println("converted_l_seq: "+converted_l_seq);
 				bam_position += 1;
 				pipe_buffer_start++;
 				continue;
@@ -206,7 +192,6 @@ public class CreateIntervalList{
 			if (converted_next_pos < -1){
 				bam_position += 1;
 				pipe_buffer_start++;
-				//System.out.println("<<<next_pos: "+converted_next_pos);
 				continue;
 			}else{
 				//System.out.println(">>>next_pos: "+converted_next_pos);
@@ -220,7 +205,6 @@ public class CreateIntervalList{
 
 			byte [] read_name_last_char = null;
 			if ((current_pipe_buffer_start+converted_l_read_name >= 1)&&(current_pipe_buffer_start+converted_l_read_name <= pipe_buffer_length)){//should >= 1 ?????? need to work on it
-				//System.out.println(">>>>>>>>>>>>>current_pipe_buffer_start+converted_l_read_name: "+(current_pipe_buffer_start+converted_l_read_name));
 				read_name_last_char = Arrays.copyOfRange(pipe_buffer, current_pipe_buffer_start+converted_l_read_name-1, current_pipe_buffer_start+converted_l_read_name);
 			}else{
 				bam_position += 1;
@@ -237,14 +221,7 @@ public class CreateIntervalList{
 
 			//guess bam alignment record, need to work on it
 			if ((converted_bam_block_size > 32+l_read_name.length+4*converted_n_cigar_op+(3*converted_l_seq+1)/2)){
-				System.out.println("---------------read_name_last_char[0] "+read_name_last_char[0]);
-				System.out.println("---------------converted_l_seq "+converted_l_seq);
-				System.out.println("---------------converted bam block size "+converted_bam_block_size);
 				System.out.println("bam record found");
-				System.out.println("---------------converted_pos: "+converted_pos);
-				System.out.println("---------------converted_next_pos: "+converted_next_pos);
-				System.out.println("---------------converted_refID: "+converted_refID);
-				System.out.println("---------------converted_next_refID: "+converted_next_refID);
 				//return refID and start pos
 				//return_values[0] = converted_refID+1;
 				//return_values[1] = converted_pos+1;
@@ -257,24 +234,18 @@ public class CreateIntervalList{
 				pipe_buffer_start++;
 			}
 		}//while end
-		//System.out.println(bam_position+"**************"+bam_length);
-		//System.out.println(pipe_buffer_start+"**************"+pipe_buffer_length);
 
 		//int converted_block_size = 0;
 		int read_to_the_last_block_of_current_split = 0;
 		int read_one_more_block = 0;
 		int second_seq = 1;
 		while (true){
-			//System.out.println("**************");
 			//a bgzf block span within the first 4 bytes of the next bgzf block
 			if (pipe_buffer_start + 12 >= pipe_buffer_length - 1){
-				//System.out.println(bam_position+"**************"+bam_length);
-				//System.out.println("read a bgzf block--------------");
 				previous_bam_length = bam_length;
 				bgzf_block_size = readBGZFBlock(in,pipe_buffer_start,pipe_buffer_length,bgzf_position);
 				bgzf_position += bgzf_block_size;
 				if (bgzf_block_size == 28){//the final block is empty
-					System.out.println("******************last block");
 					//return_values[2] = previous_converted_pos;//should plus the sequence length, need to work on it
 					return_values[element++] = previous_converted_pos;//should plus the sequence length, need to work on it
 					break;
@@ -289,23 +260,19 @@ public class CreateIntervalList{
 			int converted_block_size = bigToLittleEndian(byteArrayToInt(block_size,0));
 			bam_position += 4;
 			bam_position += converted_block_size;
-			//System.out.println(">converted_block_size: "+converted_block_size+"**************");
 
 			byte [] refID = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 			pipe_buffer_start += 4;
 			int converted_refID = bigToLittleEndian(byteArrayToInt(refID,0));
-			//System.out.println(">refID:"+converted_refID);
 			
 			byte [] pos = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, pipe_buffer_start+4);
 			pipe_buffer_start += 4;
 			int converted_pos = bigToLittleEndian(byteArrayToInt(pos,0));
-			//System.out.println(">pos:"+converted_pos);
 			
 			if (pipe_buffer_start + converted_block_size-8 >= pipe_buffer_length - 1){
 				bgzf_block_size = readBGZFBlock(in,pipe_buffer_start,pipe_buffer_length,bgzf_position);
 				bgzf_position += bgzf_block_size;
 				if (bgzf_block_size == 28){//the final block is empty
-					System.out.println("******************last block");
 					//return_values[2] = previous_converted_pos;//should plus the sequence length, need to work on it
 					return_values[element++] = previous_converted_pos;//should plus the sequence length, need to work on it
 					break;
@@ -314,13 +281,10 @@ public class CreateIntervalList{
 					read_one_more_block = 1;
 				}
 			}
-			//System.out.println("converted_block_size: "+converted_block_size+" pipe_buffer_start: "+pipe_buffer_start+" pipe_buffer_start+converted_block_size-8: "+(pipe_buffer_start+converted_block_size-8));
 			byte [] t = Arrays.copyOfRange(pipe_buffer, pipe_buffer_start, (pipe_buffer_start+converted_block_size-8));
 			pipe_buffer_start += converted_block_size-8;
-			//System.out.println(new String(t));
 
 			if (converted_refID == -1){
-				System.out.println("-----------0----------");
 				continue;
 			}
 
@@ -332,7 +296,6 @@ public class CreateIntervalList{
 				//begin another interval list info
 				return_values[element++] = converted_refID;
 				return_values[element++] = converted_pos+1;
-				System.out.println("-----------2----------");
 				//break;
 			}
 
@@ -343,7 +306,6 @@ public class CreateIntervalList{
 			if (second_seq == 2){//begin from the second alignment record of a bgzf block, the first one may span two bgzf blocks
 				//return_values[2] = converted_pos;
 				return_values[element++] = converted_pos;
-				System.out.println("------------3---------");
 				break;
 			}
 
@@ -401,7 +363,6 @@ public class CreateIntervalList{
 			//fos.write(XLEN);
 			short converted_XLEN = bigToLittleEndianShort(byteArrayToShort(XLEN,0));
 			int xlen = (int) converted_XLEN & 0x0000ffff;
-			//System.out.println(">XLEN:"+xlen+"<");
 			
 			
 			/*
@@ -419,7 +380,6 @@ public class CreateIntervalList{
 			//fos.write(BSIZE);
 			short converted_BSIZE = bigToLittleEndianShort(byteArrayToShort(BSIZE,0));
 			bsize = (int) (converted_BSIZE & 0x0000ffff);
-			//System.out.println(">BSIZE:"+bsize+"<");
 			split_start += 2;
 
 			//process compressed contents
@@ -435,7 +395,6 @@ public class CreateIntervalList{
 			in.readFully(split_start,CRC32);
 			//fos.write(CRC32);
 			//int converted_CRC32 = bigToLittleEndian(CRC32);
-			//System.out.println(">CRC32:"+new Long((long) (converted_CRC32 & 0x00000000ffffffffl)).toString()+"<");
 			split_start += 4;
 
 			byte [] ISIZE = new byte[4];
@@ -443,7 +402,6 @@ public class CreateIntervalList{
 			in.readFully(split_start,ISIZE);
 			//fos.write(ISIZE);
 			int converted_ISIZE = bigToLittleEndian(byteArrayToInt(ISIZE,0));
-			//System.out.println(">ISIZE:"+new Long((long) (converted_ISIZE & 0x00000000ffffffffl)).toString()+"<");
 			split_start += 4;
 
 			//unzip compressed contents using inflate method
